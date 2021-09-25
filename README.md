@@ -27,9 +27,9 @@ Podemos descargar todo el código y los archivos de soporte como un archivo zip.
 ## Ficheros
 
 ### Ficheros que editaremos:
-<ins>search.py</ins> Donde estarán los algoritmos de búsqueda.
+<ins>[search.py](https://github.com/sanjuesc/TIA_laboratorio1/blob/master/search.py)</ins> Donde estarán los algoritmos de búsqueda.
 
-<ins>searchAgents.py</ins> Donde estarán los agentes basados en búsqueda.
+<ins>[searchAgents.py](https://github.com/sanjuesc/TIA_laboratorio1/blob/master/searchAgents.py)</ins> Donde estarán los agentes basados en búsqueda.
 
 ### Ficheros que puede interesar mirar:
 <ins>pacman.py</ins> El fichero principal que ejecuta los juegos Pacman. Este fichero define un tipo Pacman GameState, que podemos usar en este proyecto.
