@@ -87,48 +87,51 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
 
 
-    https://www.hackerearth.com/practice/algorithms/graphs/depth-first-search/tutorial/
-          let S be stack
-      S.push( s )            //Inserting s in stack
-      mark s as visited.
-      while ( S is not empty):
-          //Pop a vertex from stack to visit next
-          v  =  S.top( )
-         S.pop( )
-         //Push all the neighbours of v in stack that are not visited
-        for all neighbours w of v in Graph G:
-            if w is not visited :
-                     S.push( w )
-                    mark w as visited
 
     """
     "*** YOUR CODE HERE ***"
 
-    caminosPosibles = util.Stack()
-    visitados = []
-    caminosPosibles.push((problem.getStartState(), [])) #Estamos en la posicion inicial y hemos hecho [] movimientos en este camino
-    visitados.append(problem.getStartState()[0]) #no es necesario realmente, pero lo añadimos a visitados por que si no volveriamos a el en cada uno de sus succesors para comprobar si es el final
-                                              # luego mirariamos su succesors de nuevo, los cuales estarian ya visitados y bla bla bla... en resumen: perderiamos tiempo
 
-    while not caminosPosibles.isEmpty():
+    """
+    Pseudocode from http://www.mathcs.emory.edu/~cheung/Courses/171/Syllabus/11-Graph/dfs.html
+       Set all nodes to "not visited";
 
-        elementoActual,lista_movimientos = caminosPosibles.pop() #Cogemos el elemento y los movimientos hechos para llegar a el
-        for successor in problem.getSuccessors(elementoActual):
-            pos=successor[0]
-            dir=successor[1]
-            if pos not in visitados: #Si ya hemos visitado el elemento pasamos de el, por que ya estara en el camino que hemos recorrido
-                if(problem.isGoalState(pos)):
-                    actualizada = lista_movimientos + [dir] #podemos ahorrarnos estas dos lineas y returnear directamene el append
-                    #print(actualizada)
-                    return(actualizada)
-                else:
-                    actualizada = lista_movimientos + [dir] #podemos ahorrarnos estas dos lineas y returnear directamene el append
-                    #print(actualizada)
-                    caminosPosibles.push((pos, actualizada)) #lo haria con arrays de numpy pero el coste de hacer un append en python es O(1) asi que solo haria el programa mas lento
-                    #Dejo el codigo de todas formas por si en el futuro necesitamos usar arrays de numpy para optimizar otros ejercicios
-                    ##caminosPosibles.push((pos, np.append(np.array(lista_movimientos),np.array(dir).tolist())))
-                    visitados.append(pos)
+   s = new Stack();    ******* Change to use a stack
 
+   s.push(initial node);    ***** Push() stores a value in a stack
+
+   while ( s ≠ empty ) do
+   {
+      x = s.pop();         ****** Pop() remove a value from the stack
+
+      if ( x has not been visited )
+      {
+         visited[x] = true;         // Visit node x !
+
+         for ( every edge (x, y)  /* we are using all edges ! */ )    
+            if ( y has not been visited )   
+	       s.push(y);       ***** Use push() !
+      }
+   }
+    """
+    caminos_posibles = util.Stack()
+    caminos_posibles.push(problem.getStartState())
+    visitados, camino = [],[]
+    caminoFinal=util.Stack()
+    actual = caminos_posibles.pop()
+    while not problem.isGoalState(actual): #si no hemos terminado
+        if actual not in visitados:
+            visitados.append(actual)
+            successors = problem.getSuccessors(actual)
+            #print(successors)
+            for siguiente,direccion,coste in successors: #son tres valores, las coordenadas, la direccion y el coste (creo?). si no pongo la ultima variable sale too many values to unpack (expected 2)
+                if siguiente not in visitados:
+                    caminos_posibles.push(siguiente) # meto sus coordenadas y el camino en los Stacks correspondientes
+                    foo = camino + [direccion]
+                    caminoFinal.push(foo) #lo mismo que antes (es importante que ambas pilas vayan sincronizadas, si hago push en una, hago push en la otra tambien
+        actual = caminos_posibles.pop() #paso al siguiente nodo (coordenadas) posible
+        camino = caminoFinal.pop() #y recupero su camino tambien
+    return camino
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
