@@ -114,10 +114,9 @@ def depthFirstSearch(problem):
       }
    }
     """
-    caminos_posibles = util.Stack()
+    caminos_posibles, caminoFinal = (util.Stack() for i in range(2)) #Asi es mas facil cambiar la estructura de todos a la vez
     caminos_posibles.push(problem.getStartState())
-    visitados, camino = [],[]
-    caminoFinal=util.Stack()
+    visitados, camino = ([] for i in range(2)) #Esto es como antes pero con un array vacio
     actual = caminos_posibles.pop()
     while not problem.isGoalState(actual): #si no hemos terminado
         if actual not in visitados:
@@ -136,22 +135,24 @@ def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
 
-    #Se inicializa la fila de elementos no analizados
-    noVisitados = util.Queue()
-    noVisitados.push(problem.getStartState) #Se mete el nodo inicial en la cola
-
-    #Se inicializa el array de elementos que hemos visitados (por ahora está vacío)
-    analizados = []
-
-    actual = problem.getStartState #Variable que define el nodo que se está analizando
-
-    while problem.isGoalState(actual) or noVisitados.isEmpty():
-        analizados.append(actual) #Se mete el nodo en la lista de analizados
-        for vecino in problem.getSuccesors(actual): #Se cogen todos los vecinos de un nodo
-            if vecino not in analizados: #Si el vecino que hemos cogido no se ha analizado se mete en la fila
-                noVisitados.push(vecino)
-        actual = noVisitados.pop() #Se coge el siguiente el siguiente nodo para analizar
-
+    caminos_posibles, caminoFinal = (util.Queue() for i in range(2)) #Asi es mas facil cambiar la estructura de todos a la vez
+    caminos_posibles.push(problem.getStartState())
+    visitados, camino = ([] for i in range(2))
+    caminoFinal=util.Queue()
+    actual = caminos_posibles.pop()
+    while not problem.isGoalState(actual): #si no hemos terminado
+        if actual not in visitados:
+            visitados.append(actual)
+            successors = problem.getSuccessors(actual)
+            #print(successors)
+            for siguiente,direccion,coste in successors: #son tres valores, las coordenadas, la direccion y el coste (creo?). si no pongo la ultima variable sale too many values to unpack (expected 2)
+                if siguiente not in visitados:
+                    caminos_posibles.push(siguiente) # meto sus coordenadas y el camino en los Stacks correspondientes
+                    foo = camino + [direccion]
+                    caminoFinal.push(foo) #lo mismo que antes (es importante que ambas pilas vayan sincronizadas, si hago push en una, hago push en la otra tambien
+        actual = caminos_posibles.pop() #paso al siguiente nodo (coordenadas) posible
+        camino = caminoFinal.pop() #y recupero su camino tambien
+    return camino
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
