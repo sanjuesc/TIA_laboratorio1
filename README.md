@@ -7,6 +7,13 @@
     + [Ficheros que puede interesar mirar:](#ficheros-que-puede-interesar-mirar-)
     + [Ficheros de apoyo que podemos ignorar:](#ficheros-de-apoyo-que-podemos-ignorar-)
 
+---
+**Nota**
+
+Por favor no comit-eeis los archivos tipo ```search.iml``` y ```misc.xml```, que si no tenemos que estar cambiando el venv cada vez que alguien hace un cambio.
+
+---
+
 ## Introduccion
 
 En este proyecto, nuestro agente de Pacman encontrará caminos a través de su mundo de
@@ -23,6 +30,7 @@ El código para este proyecto consta de varios ficheros de Python, algunos de lo
 deberán leer y comprender para completar la tarea, y algunos de los cuales podemos ignorar.
 Podemos descargar todo el código y los archivos de soporte como un archivo zip.
 
+---
 
 ## Ficheros
 
