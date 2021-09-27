@@ -138,7 +138,6 @@ def breadthFirstSearch(problem):
     caminos_posibles, caminoFinal = (util.Queue() for i in range(2)) #Asi es mas facil cambiar la estructura de todos a la vez
     caminos_posibles.push(problem.getStartState())
     visitados, camino = ([] for i in range(2))
-    caminoFinal=util.Queue()
     actual = caminos_posibles.pop()
     while not problem.isGoalState(actual): #si no hemos terminado
         if actual not in visitados:
