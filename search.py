@@ -135,7 +135,22 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    #Se inicializa la fila de elementos no analizados
+    noVisitados = util.Queue()
+    noVisitados.push(problem.getStartState) #Se mete el nodo inicial en la cola
+
+    #Se inicializa el array de elementos que hemos visitados (por ahora está vacío)
+    analizados = []
+
+    actual = problem.getStartState #Variable que define el nodo que se está analizando
+
+    while problem.isGoalState(actual) or noVisitados.isEmpty():
+        analizados.append(actual) #Se mete el nodo en la lista de analizados
+        for vecino in problem.getSuccesors(actual): #Se cogen todos los vecinos de un nodo
+            if vecino not in analizados: #Si el vecino que hemos cogido no se ha analizado se mete en la fila
+                noVisitados.push(vecino)
+        actual = noVisitados.pop() #Se coge el siguiente el siguiente nodo para analizar
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
