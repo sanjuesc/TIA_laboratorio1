@@ -16,6 +16,7 @@
 In search.py, you will implement generic search algorithms which are called by
 Pacman agents (in searchAgents.py).
 """
+import heapq
 
 import util
 
@@ -153,9 +154,47 @@ def breadthFirstSearch(problem):
         camino = caminoFinal.pop() #y recupero su camino tambien
     return camino
 def uniformCostSearch(problem):
-    """Search the node of least total cost first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # Se hace uso del módulo HeapQ (https://docs.python.org/2/library/heapq.html) para implementar una cola con prioridad
+
+    estadosDirecciones = util.PriorityQueue()
+    estadosDirecciones.push((problem.getStartState(), []), 0)
+
+    visitados = []
+    visitados.append(problem.getStartState())
+
+    while not estadosDirecciones.isEmpty():
+        estado, direcciones = estadosDirecciones.pop()
+
+        if problem.isGoalState(estado):
+            return direcciones
+
+        if estado not in visitados:
+            visitados.append(estado)
+
+        for prox in problem.getSuccessors(estado):
+
+            proxEstado = prox[0]
+            proxDireccion = prox[1]
+
+            if proxEstado not in visitados:
+                direccionesNuevas = direcciones + [proxDireccion]
+                prioridad = problem.getCostOfActions(direccionesNuevas)
+
+                for index, (p, c, i) in enumerate(estadosDirecciones.heap):
+
+                    if i[0] == proxEstado:
+
+                        if p <= prioridad:
+                            break
+
+                        del estadosDirecciones.heap[index]
+                        estadosDirecciones.heap.append((prioridad, c, (proxEstado, direccionesNuevas)))
+                        # Heapify transforma la lista en una cola con prioridad
+                        heapq.heapify(estadosDirecciones.heap)
+                        break
+                else:
+                    estadosDirecciones.push((proxEstado, direccionesNuevas), prioridad)
+
 
 def nullHeuristic(state, problem=None):
     """
