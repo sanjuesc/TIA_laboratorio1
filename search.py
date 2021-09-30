@@ -42,6 +42,10 @@ class SearchProblem:
         """
         util.raiseNotDefined()
 
+    def getFinalState(selfself,state):
+
+        util.raiseNotDefined()
+
     def getSuccessors(self, state):
         """
           state: Search state
@@ -144,7 +148,6 @@ def breadthFirstSearch(problem):
         if actual not in visitados:
             visitados.append(actual)
             successors = problem.getSuccessors(actual)
-            #print(successors)
             for siguiente,direccion,coste in successors: #son tres valores, las coordenadas, la direccion y el coste (creo?). si no pongo la ultima variable sale too many values to unpack (expected 2)
                 if siguiente not in visitados:
                     caminos_posibles.push(siguiente) # meto sus coordenadas y el camino en los Stacks correspondientes
@@ -154,46 +157,47 @@ def breadthFirstSearch(problem):
         camino = caminoFinal.pop() #y recupero su camino tambien
     return camino
 def uniformCostSearch(problem):
-    # Se hace uso del módulo HeapQ (https://docs.python.org/2/library/heapq.html) para implementar una cola con prioridad
 
-    estadosDirecciones = util.PriorityQueue()
-    estadosDirecciones.push((problem.getStartState(), []), 0)
+    #Se crea la PriorityQueue y se le inserta el estado inicial para analizar
+    porVisitar = util.PriorityQueue()
+    porVisitar.push((problem.getStartState(), []), 0)
 
     visitados = []
     visitados.append(problem.getStartState())
 
-    while not estadosDirecciones.isEmpty():
-        estado, direcciones = estadosDirecciones.pop()
+    while not porVisitar.isEmpty():
+        estado, direcciones = porVisitar.pop()
 
+        # El caso en el que se haya llegado a la meta, se pone al principio para no ejecutar todo a lo tonto
         if problem.isGoalState(estado):
             return direcciones
 
+        # Si el estado actual no se ha visitado meter en la lista de visitados
         if estado not in visitados:
             visitados.append(estado)
 
-        for prox in problem.getSuccessors(estado):
+        for vecinos in problem.getSuccessors(estado):
 
-            proxEstado = prox[0]
-            proxDireccion = prox[1]
+            # Recordamos que cada estado tiene el estado en sí y la dirección
+            estadoVecinos = vecinos[0]
+            direccionVecino = vecinos[1]
 
-            if proxEstado not in visitados:
-                direccionesNuevas = direcciones + [proxDireccion]
+            # Si el estado del vecino no se ha analizado todavía
+            if estadoVecinos not in visitados:
+                direccionesNuevas = direcciones + [direccionVecino]
                 prioridad = problem.getCostOfActions(direccionesNuevas)
 
-                for index, (p, c, i) in enumerate(estadosDirecciones.heap):
-
-                    if i[0] == proxEstado:
-
+                for index, (p, c, i) in enumerate(porVisitar.heap):
+                    if i[0] == estadoVecinos:
                         if p <= prioridad:
                             break
+                        del porVisitar.heap[index]
+                        porVisitar.heap.append((prioridad, c, (estadoVecinos, direccionesNuevas)))
 
-                        del estadosDirecciones.heap[index]
-                        estadosDirecciones.heap.append((prioridad, c, (proxEstado, direccionesNuevas)))
-                        # Heapify transforma la lista en una cola con prioridad
-                        heapq.heapify(estadosDirecciones.heap)
+                        heapq.heapify(porVisitar.heap) #Para hacer de una lista una cola de prioridad
                         break
-                else:
-                    estadosDirecciones.push((proxEstado, direccionesNuevas), prioridad)
+                    else:
+                        porVisitar.push((estadoVecinos, direccionesNuevas), prioridad)
 
 
 def nullHeuristic(state, problem=None):
@@ -204,9 +208,7 @@ def nullHeuristic(state, problem=None):
     return 0
 
 def aStarSearch(problem, heuristic=nullHeuristic):
-    """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    return 0
 
 
 # Abbreviations
