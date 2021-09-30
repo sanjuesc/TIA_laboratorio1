@@ -171,33 +171,33 @@ def uniformCostSearch(problem):
         # El caso en el que se haya llegado a la meta, se pone al principio para no ejecutar todo a lo tonto
         if problem.isGoalState(estado):
             return direcciones
+        else:
+            # Si el estado actual no se ha visitado meter en la lista de visitados
+            if estado not in visitados:
+                visitados.append(estado)
 
-        # Si el estado actual no se ha visitado meter en la lista de visitados
-        if estado not in visitados:
-            visitados.append(estado)
+            for vecinos in problem.getSuccessors(estado):
 
-        for vecinos in problem.getSuccessors(estado):
+                # Recordamos que cada estado tiene el estado en sí y la dirección
+                estadoVecinos = vecinos[0]
+                direccionVecino = vecinos[1]
 
-            # Recordamos que cada estado tiene el estado en sí y la dirección
-            estadoVecinos = vecinos[0]
-            direccionVecino = vecinos[1]
+                # Si el estado del vecino no se ha analizado todavía
+                if estadoVecinos not in visitados:
+                    direccionesNuevas = direcciones + [direccionVecino]
+                    prioridad = problem.getCostOfActions(direccionesNuevas)
 
-            # Si el estado del vecino no se ha analizado todavía
-            if estadoVecinos not in visitados:
-                direccionesNuevas = direcciones + [direccionVecino]
-                prioridad = problem.getCostOfActions(direccionesNuevas)
+                    for index, (p, c, i) in enumerate(porVisitar.heap):
+                        if i[0] == estadoVecinos:
+                            if p <= prioridad:
+                                break
+                            del porVisitar.heap[index]
+                            porVisitar.heap.append((prioridad, c, (estadoVecinos, direccionesNuevas)))
 
-                for index, (p, c, i) in enumerate(porVisitar.heap):
-                    if i[0] == estadoVecinos:
-                        if p <= prioridad:
+                            heapq.heapify(porVisitar.heap)  # Para hacer de una lista una cola de prioridad
                             break
-                        del porVisitar.heap[index]
-                        porVisitar.heap.append((prioridad, c, (estadoVecinos, direccionesNuevas)))
-
-                        heapq.heapify(porVisitar.heap) #Para hacer de una lista una cola de prioridad
-                        break
-                    else:
-                        porVisitar.push((estadoVecinos, direccionesNuevas), prioridad)
+                        else:
+                            porVisitar.push((estadoVecinos, direccionesNuevas), prioridad)
 
 
 def nullHeuristic(state, problem=None):
@@ -207,8 +207,50 @@ def nullHeuristic(state, problem=None):
     """
     return 0
 
+
 def aStarSearch(problem, heuristic=nullHeuristic):
-    return 0
+
+    porVisitar = util.PriorityQueue()
+    porVisitar.push((problem.getStartState(), []), heuristic(problem.getStartState(), problem))
+
+    visitados = []
+    visitados.append(problem.getStartState())
+
+    while not porVisitar.isEmpty():
+
+        estado, direcciones = porVisitar.pop()
+
+        if problem.isGoalState(estado):
+            return direcciones
+
+        else:
+            if estado not in visitados:
+                visitados.append(estado)
+
+            for vecino in problem.getSuccessors(estado):
+
+                estadoVecinos = vecino[0]
+                direccionVecinos = vecino[1]
+
+                if estadoVecinos not in visitados:
+
+                    direccionesNuevas = direcciones + [direccionVecinos]
+                    prioridad = problem.getCostOfActions(direccionesNuevas) + heuristic(estadoVecinos, problem)
+
+                    for index, (p, c, i) in enumerate(porVisitar.heap):
+
+                        if i[0] == estadoVecinos:
+
+                            if p <= prioridad:
+                                break
+
+                            del porVisitar.heap[index]
+                            porVisitar.heap.append((prioridad, c, (estadoVecinos, direccionesNuevas)))
+                            # Heapify transforma la lista en una cola con prioridad
+                            heapq.heapify(porVisitar.heap)
+                            break
+                    else:
+                        porVisitar.push((estadoVecinos, direccionesNuevas), prioridad)
 
 
 # Abbreviations
