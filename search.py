@@ -165,7 +165,7 @@ def uniformCostSearch(problem):
     visitados = []
     visitados.append(problem.getStartState())
 
-    while not porVisitar.isEmpty():
+    while porVisitar:
         estado, direcciones = porVisitar.pop()
 
         # El caso en el que se haya llegado a la meta, se pone al principio para no ejecutar todo a lo tonto
@@ -210,14 +210,14 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
 
+    #Se crea la PriorityQueue y se le inserta el estado inicial para analizar
     porVisitar = util.PriorityQueue()
-    porVisitar.push((problem.getStartState(), []), heuristic(problem.getStartState(), problem))
+    porVisitar.push((problem.getStartState(), []), nullHeuristic(problem.getStartState(), problem))
 
     visitados = []
     visitados.append(problem.getStartState())
 
-    while not porVisitar.isEmpty():
-
+    while porVisitar:
         estado, direcciones = porVisitar.pop()
 
         if problem.isGoalState(estado):
@@ -240,17 +240,15 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                     for index, (p, c, i) in enumerate(porVisitar.heap):
 
                         if i[0] == estadoVecinos:
-
                             if p <= prioridad:
                                 break
 
                             del porVisitar.heap[index]
                             porVisitar.heap.append((prioridad, c, (estadoVecinos, direccionesNuevas)))
-                            # Heapify transforma la lista en una cola con prioridad
                             heapq.heapify(porVisitar.heap)
                             break
-                    else:
-                        porVisitar.push((estadoVecinos, direccionesNuevas), prioridad)
+                        else:
+                            porVisitar.push((estadoVecinos, direccionesNuevas), prioridad)
 
 
 # Abbreviations
