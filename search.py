@@ -187,7 +187,8 @@ def uniformCostSearch(problem):
                     direccionesNuevas = direcciones + [direccionVecino]
                     prioridad = problem.getCostOfActions(direccionesNuevas)
 
-                    for index, (p, c, i) in enumerate(porVisitar.heap):
+                    for index, (p, c, i) in enumerate(porVisitar.heap):#la funcion update de la priorityqueue no va ya que hay que usar i[0]
+                        #reescribo la funcion (es mas facil que averiguar como hacer que funcione)
                         if i[0] == estadoVecinos:
                             if p <= prioridad:
                                 break
@@ -196,8 +197,8 @@ def uniformCostSearch(problem):
 
                             heapq.heapify(porVisitar.heap)  # Para hacer de una lista una cola de prioridad
                             break
-                        else:
-                            porVisitar.push((estadoVecinos, direccionesNuevas), prioridad)
+                    else:
+                        porVisitar.push((estadoVecinos, direccionesNuevas), prioridad)
 
 
 def nullHeuristic(state, problem=None):
@@ -237,8 +238,8 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                     direccionesNuevas = direcciones + [direccionVecinos]
                     prioridad = problem.getCostOfActions(direccionesNuevas) + heuristic(estadoVecinos, problem)
 
-                    for index, (p, c, i) in enumerate(porVisitar.heap):
-
+                    for index, (p, c, i) in enumerate(porVisitar.heap): #la funcion update de la priorityqueue no va ya que hay que usar i[0]
+                        #reescribo la funcion (es mas facil que averiguar como hacer que funcione)
                         if i[0] == estadoVecinos:
                             if p <= prioridad:
                                 break
@@ -247,8 +248,8 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                             porVisitar.heap.append((prioridad, c, (estadoVecinos, direccionesNuevas)))
                             heapq.heapify(porVisitar.heap)
                             break
-                        else:
-                            porVisitar.push((estadoVecinos, direccionesNuevas), prioridad)
+                    else:
+                        porVisitar.push((estadoVecinos, direccionesNuevas), prioridad)
 
 
 # Abbreviations
