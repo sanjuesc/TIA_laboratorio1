@@ -322,8 +322,9 @@ class CornersProblem(search.SearchProblem):
             is the incremental cost of expanding to that successor
         """
 
-
         successors = []
+        visitados = state[1] #Se cogen las esquinas que ya se han visitado
+
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
             # Here's a code snippet for figuring out whether a new position hits a wall:
@@ -333,10 +334,18 @@ class CornersProblem(search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
-            x, y = state[0]  #Así se coje la posición inicial
-            dx, dy = Actions.directionToVector(action)
-            nextx, nexty = int(x + dx), int(y + dy)
+            x, y = state[0]  #Así se coje la posición actual
+            dx, dy = Actions.directionToVector(action) #Hacia donde ha ido
+            nextx, nexty = int(x + dx), int(y + dy) #Coordenadas nuevas
+            siguiente = (nextx,nexty)
             hitsWall = self.walls[nextx][nexty]
+            if not hitsWall: #Si no te has chocado con una pared
+                if siguiente in self.corners: #Si el siguiente es una esquina
+                    if siguiente not in visitados: #Si no has pasado por esa esquina
+                        visitados.append(siguiente)
+                estadoNuevo = (siguiente,visitados) #Con esto se crea el estado nuevo
+                nodoNuevo = (estadoNuevo,action,1) #Con el estado se crea el nodo nuevo
+                successors.append(nodoNuevo)
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
@@ -372,6 +381,11 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
+
+    #Lo de siempre, coger el nodo y lo que ha visitado
+    nodo = state[0]
+    visitados = state[1]
+
     return 0 # Default to trivial solution
 
 class AStarCornersAgent(SearchAgent):
