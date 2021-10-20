@@ -504,7 +504,7 @@ def foodHeuristic(state, problem):
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
 
-    listaComida = foodGrid.asList #Lo volvemos una lista para hacer las cosas más fáciles
+    listaComida = foodGrid.asList() #Lo volvemos una lista para hacer las cosas más fáciles
 
     distanciaTotal = 0
     comidaMin = None  # Inicializamos con None por que hay que meter algo
