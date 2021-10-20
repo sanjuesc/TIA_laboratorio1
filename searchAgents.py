@@ -384,32 +384,30 @@ def cornersHeuristic(state, problem):
 
     "*** YOUR CODE HERE ***"
 
-    #Lo de siempre, coger el nodo y lo que ha visitado
+
     nodo = state[0]
-    visitados = state[1]
+    esquinas_visitadas = state[1]
+    total = 0
 
-    noVisitados = [x for x in corners] #Con esto se cogen las esquinas no visitadas (todas)
+    no_visitadas = []
+    for i in range(4):
+        if corners[i] not in esquinas_visitadas:
+            #esquinas_visitadas.pop(i) #vale soy tonto, no me estaba dando cuenta de que al sacarla el tamaño ya no es 4
+                                       #y que los elementos de despues de i se mueven para no dejar un hueco libre en la lista
+            no_visitadas.append(corners[i])
 
-    distanciaTotal = 0
-    esquinaMin = None #Inicializamos con None por que hay que meter algo
+    #print(no_visitadas)
+    #print(esquinas_visitadas)
+    pos = nodo
+    while(len(no_visitadas)!=0):
+        #print(min([(util.manhattanDistance(pos ,esquina_aux),esquina_aux) for esquina_aux in no_visitadas]))
+        #creia que no era una tupla
+        dist, esquina = min([(util.manhattanDistance(pos ,esquina_aux),esquina_aux) for esquina_aux in no_visitadas])
+        total = total + dist
+        pos = esquina
+        no_visitadas.pop(no_visitadas.index(esquina))
 
-    while len(noVisitados) != 0:
-        actualMin = sys.maxsize
-        for corner in noVisitados:
-            distAct = util.manhattanDistance(nodo,corner) #La distancia Manhattan del nodo a la esquina X
-
-            if (distAct < actualMin):
-                actualMin = distAct
-                esquinaMin = corner
-
-        #Se suma la distancia mínima sacada al total
-        distanciaTotal += actualMin
-
-        #Actualizar la posición del pacman
-        nodo = esquinaMin
-        noVisitados.remove(nodo)
-
-    return distanciaTotal
+    return total # Default to trivial solution
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
