@@ -408,7 +408,7 @@ def cornersHeuristic(state, problem):
         nodo = esquinaMin
         noVisitados.remove(nodo)
 
-    return distanciaTotal # Default to trivial solution
+    return distanciaTotal
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
@@ -502,7 +502,31 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return 0
+
+    listaComida = foodGrid.asList #Lo volvemos una lista para hacer las cosas más fáciles
+
+    distanciaTotal = 0
+    comidaMin = None  # Inicializamos con None por que hay que meter algo
+
+    for c in listaComida:
+        actualMin = sys.maxsize
+        for comida in listaComida:
+            distAct = util.manhattanDistance(position, comida)  # La distancia Manhattan del nodo a la esquina X
+
+            if (distAct < actualMin):
+                actualMin = distAct
+                comidaMin = comida
+
+        # Se suma la distancia mínima sacada al total
+        distanciaTotal += actualMin
+
+        #Actualizar la posición del pacman
+        position = comidaMin
+
+        #Borrar la comida ya comida (valga la redundancia)
+        listaComida.remove(comidaMin)
+
+    return distanciaTotal  # Default to trivial solution
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
@@ -569,7 +593,7 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         x,y = state
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return self.food[x][y]
 
 def mazeDistance(point1, point2, gameState):
     """
