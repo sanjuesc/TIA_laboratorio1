@@ -295,7 +295,7 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        return (self.startingPosition,self.corners)
+        return (self.startingPosition,[])
 
     def isGoalState(self, state):
         """
@@ -303,12 +303,14 @@ class CornersProblem(search.SearchProblem):
         """
         "*** YOUR CODE HERE ***"
 
-        ahora = state[0]
-        visitados = state[1]
-        if ahora in self.corners: #Si el nodo actual es una esquina
-            if ahora not in visitados: #Si la esquina esa no se ha visitado
-                visitados.append(ahora)
-        return len(visitados) == 4 # Si se han visitado las 4 esquinas devueve true, si no false
+        pos = state[0]
+        Visited_Corners = state[1]
+        if pos in self.corners:
+            if pos not in Visited_Corners:
+                Visited_Corners.append(pos)
+            return len(Visited_Corners)==4
+        else:
+            return False
 
 
     def getSuccessors(self, state):
@@ -323,8 +325,6 @@ class CornersProblem(search.SearchProblem):
         """
 
         successors = []
-        visitados = state[1] #Se cogen las esquinas que ya se han visitado
-
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
             # Here's a code snippet for figuring out whether a new position hits a wall:
@@ -334,21 +334,22 @@ class CornersProblem(search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
-            x, y = state[0]  #Así se coje la posición actual
-            dx, dy = Actions.directionToVector(action) #Hacia donde ha ido
-            nextx, nexty = int(x + dx), int(y + dy) #Coordenadas nuevas
-            siguiente = (nextx,nexty)
-            hitsWall = self.walls[nextx][nexty]
-            if not hitsWall: #Si no te has chocado con una pared
-                if siguiente in self.corners: #Si el siguiente es una esquina
-                    if siguiente not in visitados: #Si no has pasado por esa esquina
-                        visitados.append(siguiente)
-                estadoNuevo = (siguiente,visitados) #Con esto se crea el estado nuevo
-                nodoNuevo = (estadoNuevo,action,1) #Con el estado se crea el nodo nuevo
-                successors.append(nodoNuevo)
+            coords, visitados = state
+            x, y = coords
+            dx, dy = Actions.directionToVector(action) # es lo de arriba pero vamos, cogemos x,y, deltax y deltay
+            nextx, nexty = int(x + dx), int(y + dy) #calculamos cual sera el sigueinte node
+            next_node = (nextx, nexty)  #y lo ponemos
+            #hitsWall = self.walls[nextx][nexty]
+            if not self.walls[nextx][nexty]:
+                lista_visitados = list(visitados)
+                if next_node in self.corners:
+                    if next_node not in lista_visitados: #si no estaba visitado, ahora si
+                        lista_visitados.append(next_node)
+                successor = ((next_node, lista_visitados), action, None) #si no pongo lo ultimo peta
+                successors.append(successor)                             #por ahora funciona asi que lo dejo, si en un futuro hay que cambiarlo ya me leer el resto del codigo
 
         self._expanded += 1 # DO NOT CHANGE
-        return successors
+        return successors #si el codigo dice que no lo cambio no lo cambio
 
     def getCostOfActions(self, actions):
         """
