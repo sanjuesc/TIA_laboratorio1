@@ -33,6 +33,7 @@ description for details.
 
 Good luck and happy searching!
 """
+import sys
 
 from game import Directions
 from game import Agent
@@ -386,7 +387,28 @@ def cornersHeuristic(state, problem):
     nodo = state[0]
     visitados = state[1]
 
-    return 0 # Default to trivial solution
+    noVisitados = [x for x in corners] #Con esto se cogen las esquinas no visitadas (todas)
+
+    distanciaTotal = 0
+    esquinaMin = None #Inicializamos con None por que hay que meter algo
+
+    while len(noVisitados) != 0:
+        actualMin = sys.maxsize
+        for corner in noVisitados:
+            distAct = util.manhattanDistance(nodo,corner) #La distancia Manhattan del nodo a la esquina X
+
+            if (distAct < actualMin):
+                actualMin = distAct
+                esquinaMin = corner
+
+        #Se suma la distancia mínima sacada al total
+        distanciaTotal += actualMin
+
+        #Actualizar la posición del pacman
+        nodo = esquinaMin
+        noVisitados.remove(nodo)
+
+    return distanciaTotal # Default to trivial solution
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
