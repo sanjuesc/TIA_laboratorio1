@@ -340,7 +340,7 @@ class CornersProblem(search.SearchProblem):
             dx, dy = Actions.directionToVector(action) # es lo de arriba pero vamos, cogemos x,y, deltax y deltay
             nextx, nexty = int(x + dx), int(y + dy) #calculamos cual sera el sigueinte node
             next_node = (nextx, nexty)  #y lo ponemos
-            #hitsWall = self.walls[nextx][nexty]
+
             if not self.walls[nextx][nexty]:
                 lista_visitados = list(visitados)
                 if next_node in self.corners:
