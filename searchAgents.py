@@ -556,7 +556,25 @@ class ClosestDotSearchAgent(SearchAgent):
         problem = AnyFoodSearchProblem(gameState)
 
         "*** YOUR CODE HERE ***"
-        search.aStarSearch(problem) #Hemos elegido A* por que nos parece el mejor, más complejo pero mejor
+        #search.aStarSearch(problem) #Hemos elegido A* por que nos parece el mejor, más complejo pero mejor
+
+        state_queue =util.Queue()
+        state_queue.push(startPosition,[])
+        visited = set()
+
+        while not state_queue.isEmpty():
+            node,path = state_queue.pop()
+            if node in visited:
+                continue
+            visited.add(node)
+            if problem.isGoalState(node):
+                return path
+            succesors = problem.getSuccessors(node)
+            for succesor in succesors:
+                suc_state,direction,step_cost = succesor[0],succesors[1],succesor[2]
+                if suc_state not in visited:
+                    state_queue.push((suc_state,path + [direction]))
+        return []
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
