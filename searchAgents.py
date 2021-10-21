@@ -610,7 +610,20 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         x,y = state
 
         "*** YOUR CODE HERE ***"
-        return self.food[x][y] #Te devuelve True si en las coordenadas hay una comida
+        #return self.food[x][y]#Te devuelve True si en las coordenadas hay una comida
+
+        #Inicializar la lista de comida y la distancia mínima
+        comida = self.food.asList()
+        dist = sys.maxsize
+
+        #Buscar la comida más cercana
+        for c in comida:
+            distancia = util.manhattanDistance(c,state)
+
+            if(distancia < dist):
+                dist = distancia
+
+        return dist == 0 #Está claro que si la distancia es 0 estamos sobre una comida
 
 def mazeDistance(point1, point2, gameState):
     """
