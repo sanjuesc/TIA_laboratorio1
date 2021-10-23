@@ -559,7 +559,7 @@ class ClosestDotSearchAgent(SearchAgent):
         #search.aStarSearch(problem) #Hemos elegido A* por que nos parece el mejor, más complejo pero mejor
 
         state_queue =util.Queue()
-        state_queue.push(startPosition,[])
+        state_queue.push((startPosition,[]))
         visited = set()
 
         while not state_queue.isEmpty():
