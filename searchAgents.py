@@ -558,23 +558,27 @@ class ClosestDotSearchAgent(SearchAgent):
         "*** YOUR CODE HERE ***"
         #search.aStarSearch(problem) #Hemos elegido A* por que nos parece el mejor, más complejo pero mejor
 
-        state_queue =util.Queue()
-        state_queue.push((startPosition,[]))
-        visited = set()
+        result = []
+        visited = []
 
-        while not state_queue.isEmpty():
-            node,path = state_queue.pop()
-            if node in visited:
-                continue
-            visited.add(node)
-            if problem.isGoalState(node):
-                return path
-            succesors = problem.getSuccessors(node)
-            for succesor in succesors:
-                suc_state,direction,step_cost = succesor[0],succesors[1],succesor[2]
-                if suc_state not in visited:
-                    state_queue.push((suc_state,path + [direction]))
-        return []
+        heap = util.PriorityQueue()
+        start = (problem.getStartState(), [], 0)
+        heap.push(start, start[2])
+
+        while not heap.isEmpty():
+            (state, path, cost) = heap.pop()
+            if problem.isGoalState(state):
+                result = path
+                break
+            if state not in visited:
+                visited.append(state)
+                for currState, currPath, currCost in problem.getSuccessors(state):
+                    newPath = path + [currPath]
+                    newCost = cost + currCost
+                    newState = (currState, newPath, newCost)
+                    heap.push(newState, newCost)
+
+        return result
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
